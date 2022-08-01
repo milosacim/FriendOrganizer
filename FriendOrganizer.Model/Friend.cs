@@ -8,7 +8,7 @@ namespace FriendOrganizer.Model
 
         [Required]
         [StringLength(50)]
-        [DisplayFormat(ConvertEmptyStringToNull = true)]
+        //[DisplayFormat(ConvertEmptyStringToNull = true)]
         public string? FirstName { get; set; }
         [StringLength(50)]
         public string? LastName { get; set; }
