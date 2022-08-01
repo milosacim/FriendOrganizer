@@ -1,110 +1,63 @@
 ﻿using FriendOrganizer.Model;
-using FriendOrganizer.UI.ViewModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace FriendOrganizer.UI.Wrapper
 {
-    public class FriendWrapper : ViewModelBase, INotifyDataErrorInfo
-    {
-        public Friend Model { get; }
-        public int Id { get { return Model.Id; } }
 
-        public FriendWrapper(Friend model)
+    public class FriendWrapper : ModelWrapper<Friend>
+    {
+        public FriendWrapper(Friend model) : base(model)
         {
-            Model = model;
         }
+
+        public int Id { get { return Model.Id; } }
 
         public string FirstName
         {
-            get { return Model.FirstName; }
+            get { return GetValue<string>(); }
             set
             {
-                Model.FirstName = value; 
-                OnPropertyChanged();
-                ValidateProperty(nameof(FirstName));
-            }
-        }
-
-        private void ValidateProperty(string propertyName)
-        {
-            ClearErrors(propertyName);
-            switch (propertyName)
-            {
-                case nameof(FirstName):
-                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
-                    {
-                        AddError(propertyName, "Robots are not valid Friends!");
-                    } else if (string.Equals(FirstName, ""))
-                    {
-                        AddError(propertyName, "Firstname cannot be empty!");
-                    }
-                    break;
+                SetValue(value);
             }
         }
 
         public string LastName
         {
-            get { return Model.LastName; }
+            get { return GetValue<string>(); }
             set
             {
-                LastName = value;
-                OnPropertyChanged();
+                SetValue(value);
+
             }
         }
 
         public string Email
         {
-            get { return Model.Email; }
+            get { return GetValue<string>(); }
             set
             {
-                Email = value;
-                OnPropertyChanged();
+                SetValue(value);
+
             }
         }
 
-        private Dictionary<string, List<string>> _errorsByPropertyName
-            = new Dictionary<string, List<string>>();
-
-        public bool HasErrors => _errorsByPropertyName.Any();
-
-        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
-        public IEnumerable GetErrors(string? propertyName)
+        protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
-            return _errorsByPropertyName.ContainsKey(propertyName)
-                ? _errorsByPropertyName[propertyName]
-                : null;
-        }
-
-        private void OnErrorsChanged(string propertyName)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        }
-
-        private void AddError(string propertyName, string error)
-        {
-            if (!_errorsByPropertyName.ContainsKey(propertyName))
+            switch (propertyName)
             {
-                _errorsByPropertyName[propertyName] = new List<string>();
+                case nameof(FirstName):
+                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return "Robots are not valid Friends!";
+                    }
+                    else if (string.Equals(FirstName, ""))
+                    {
+                        yield return "Firstname cannot be empty!";
+                    }
+                    break;
             }
-            if (!_errorsByPropertyName[propertyName].Contains(error))
-            {
-                _errorsByPropertyName[propertyName].Add(error);
-                OnErrorsChanged(propertyName);
-            }
-        }
 
-        private void ClearErrors(string propertyName)
-        {
-            if (_errorsByPropertyName.ContainsKey(propertyName))
-            {
-                _errorsByPropertyName.Remove(propertyName);
-                OnErrorsChanged(propertyName);
-            }
         }
     }
 }
