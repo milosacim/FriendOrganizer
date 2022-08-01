@@ -10,9 +10,12 @@ namespace FriendOrganizer.Model
         [StringLength(50)]
         //[DisplayFormat(ConvertEmptyStringToNull = true)]
         public string? FirstName { get; set; }
+
         [StringLength(50)]
         public string? LastName { get; set; }
+
         [StringLength(50)]
+        [EmailAddress]
         public string? Email { get; set; }
     }
 }
