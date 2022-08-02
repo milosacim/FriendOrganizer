@@ -1,9 +1,13 @@
 ﻿using FriendOrganizer.DataAccess;
 using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Lookups;
+using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
+using System.Configuration;
 using System.Windows;
 
 namespace FriendOrganizer.UI
@@ -28,19 +32,25 @@ namespace FriendOrganizer.UI
         {
             IServiceCollection services = new ServiceCollection();
 
-            services.AddScoped<FriendOrganizerDbContextFactory>();
+            services.AddDbContext<FriendOrganizerDbContext>(options =>
+                 options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=FriendOrganizer;Integrated Security=True"),
+                 ServiceLifetime.Scoped);
 
-            services.AddSingleton<MainViewModel>();
+            services.AddScoped<MainViewModel>();
             services.AddSingleton<INavigationViewModel, NavigationViewModel>();
 
-            services.AddSingleton<IFriendDataService, FriendDataService> ();
-            services.AddSingleton<IFriendLookupDataService, LookupDataService> ();
-            services.AddSingleton<IFriendDetailViewModel, FriendDetailViewModel> ();
+            services.AddTransient<IFriendRepository, FriendRepository>();
+            services.AddTransient<IFriendLookupDataService, LookupDataService>();
+            services.AddTransient<IFriendDetailViewModel, FriendDetailViewModel>();
+            
 
-            services.AddSingleton<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
+            services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
             services.AddSingleton<IEventAggregator, EventAggregator>();
 
+            services.AddTransient(provider => new Func<IFriendDetailViewModel?>(() => provider.GetService<FriendDetailViewModel>()));
+
             return services.BuildServiceProvider();
+
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

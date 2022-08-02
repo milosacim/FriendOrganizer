@@ -10,7 +10,7 @@ namespace FriendOrganizer.DataAccess
 {
     public class FriendOrganizerDbContextFactory : IDesignTimeDbContextFactory<FriendOrganizerDbContext>
     {
-        public FriendOrganizerDbContext CreateDbContext(string[] args=null)
+        public FriendOrganizerDbContext CreateDbContext(string[]? args=null)
         {
             var options = new DbContextOptionsBuilder<FriendOrganizerDbContext>();
             options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=FriendOrganizer;Integrated Security=True");

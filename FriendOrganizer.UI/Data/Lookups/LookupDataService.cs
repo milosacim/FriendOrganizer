@@ -5,24 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FriendOrganizer.UI.Data
+namespace FriendOrganizer.UI.Data.Lookups
 {
     public class LookupDataService : IFriendLookupDataService
     {
-        private FriendOrganizerDbContextFactory _contextFactory;
+        private readonly FriendOrganizerDbContext _context;
 
-        public LookupDataService(FriendOrganizerDbContextFactory contextFactory)
+        public LookupDataService(FriendOrganizerDbContext context)
         {
-            _contextFactory = contextFactory;
+            _context = context;
         }
 
         public async Task<IEnumerable<LookupItem>> GetFriendLookupAsync()
         {
-            using (FriendOrganizerDbContext ctx = _contextFactory.CreateDbContext())
-            {
-                return await ctx.Friends.AsNoTracking()
+                return await _context.Friends
                     .Select(f => new LookupItem { Id = f.Id, DisplayMember = f.FirstName + " " + f.LastName }).ToListAsync();
-            }
         }
     }
 }
