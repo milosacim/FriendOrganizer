@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModel\Factory\**" />
+    <EmbeddedResource Remove="ViewModel\Factory\**" />
+    <None Remove="ViewModel\Factory\**" />
+    <Page Remove="ViewModel\Factory\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>
@@ -15,10 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\FriendOrganizer.DataAccess\FriendOrganizer.DataAccess.csproj" />
     <ProjectReference Include="..\FriendOrganizer.Model\FriendOrganizer.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModel\Factory\" />
   </ItemGroup>
 
 </Project>
