@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -29,10 +30,11 @@ namespace FriendOrganizer.UI.ViewModel
 
         private IEventAggregator _eventAggregator;
         private Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
+        private IFriendDetailViewModel _friendDetailViewModel;
+
 
         public INavigationViewModel NavigationViewModel { get; }
 
-        private IFriendDetailViewModel _friendDetailViewModel;
         public IFriendDetailViewModel FriendDetailViewModel
         {
             get { return _friendDetailViewModel; }
@@ -47,6 +49,14 @@ namespace FriendOrganizer.UI.ViewModel
 
         private async void OnOpenFriendDetailView(int friendId)
         {
+            if (FriendDetailViewModel != null && FriendDetailViewModel.HasChanges)
+            {
+                var showResult = MessageBox.Show("You have made changes. Navigate away?", "Question", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                if (showResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
             FriendDetailViewModel = _friendDetailViewModelCreator();
             await FriendDetailViewModel.LoadAsync(friendId);
         }

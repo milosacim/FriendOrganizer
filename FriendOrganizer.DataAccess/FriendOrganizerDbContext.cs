@@ -4,7 +4,7 @@ using System.Configuration;
 
 namespace FriendOrganizer.DataAccess
 {
-    public class FriendOrganizerDbContext : DbContext, IFriendOrganizerDbContext
+    public class FriendOrganizerDbContext : DbContext
     {
         public FriendOrganizerDbContext(DbContextOptions options) : base(options)
         {

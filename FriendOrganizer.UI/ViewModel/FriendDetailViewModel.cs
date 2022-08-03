@@ -16,13 +16,15 @@ namespace FriendOrganizer.UI.ViewModel
         private IFriendRepository _friendRepository;
         private readonly IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
+        private bool _hasChanges;
+
 
         public FriendDetailViewModel(IFriendRepository friendRepository
             , IEventAggregator eventAggregator)
         {
             _friendRepository = friendRepository;
             _eventAggregator = eventAggregator;
-            
+
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
@@ -35,6 +37,10 @@ namespace FriendOrganizer.UI.ViewModel
 
             Friend.PropertyChanged += (s, e) =>
             {
+                if (!HasChanges)
+                {
+                    HasChanges = _friendRepository.HasChanges();
+                }
                 if (e.PropertyName == nameof(Friend.HasErrors))
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -51,17 +57,31 @@ namespace FriendOrganizer.UI.ViewModel
             private set { _friend = value; OnPropertyChanged(); }
         }
 
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set
+            {
+                if (_hasChanges != value)
+                {
+                    _hasChanges = value;
+                    OnPropertyChanged();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+
         public ICommand SaveCommand { get; }
 
         private bool OnSaveCanExecute()
         {
-            // TODO: Check in addition if friend has changed.
-            return Friend!= null && !Friend.HasErrors;
+            return Friend != null && !Friend.HasErrors && HasChanges;
         }
 
         private async void OnSaveExecute()
         {
             await _friendRepository.SaveAsync();
+            HasChanges = _friendRepository.HasChanges();
             _eventAggregator.GetEvent<AfterFriendSavedEvent>().Publish(
                 new AfterFriendSavedEventArgs
                 {
