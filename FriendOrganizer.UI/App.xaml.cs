@@ -2,6 +2,7 @@
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Lookups;
 using FriendOrganizer.UI.Data.Repositories;
+using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,7 @@ namespace FriendOrganizer.UI
             services.AddScoped<MainViewModel>();
             services.AddSingleton<INavigationViewModel, NavigationViewModel>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
+            services.AddSingleton<IMessageDialogService, MessageDialogService>();
 
             services.AddTransient<IFriendRepository, FriendRepository>();
             services.AddTransient<IFriendLookupDataService, LookupDataService>();

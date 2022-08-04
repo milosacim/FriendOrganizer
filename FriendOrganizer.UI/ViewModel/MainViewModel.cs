@@ -1,14 +1,8 @@
-﻿using FriendOrganizer.Model;
-using FriendOrganizer.UI.Data;
-using FriendOrganizer.UI.Event;
+﻿using FriendOrganizer.UI.Event;
+using FriendOrganizer.UI.View.Services;
 using Prism.Events;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -17,9 +11,11 @@ namespace FriendOrganizer.UI.ViewModel
 
         public MainViewModel(INavigationViewModel navigationViewModel,
             Func<IFriendDetailViewModel> friendDetailViewModelCreator,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
             _friendDetailViewModelCreator = friendDetailViewModelCreator;
             _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
                 .Subscribe(OnOpenFriendDetailView);
@@ -31,6 +27,7 @@ namespace FriendOrganizer.UI.ViewModel
         private IEventAggregator _eventAggregator;
         private Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
         private IFriendDetailViewModel _friendDetailViewModel;
+        private IMessageDialogService _messageDialogService;
 
 
         public INavigationViewModel NavigationViewModel { get; }
@@ -51,8 +48,8 @@ namespace FriendOrganizer.UI.ViewModel
         {
             if (FriendDetailViewModel != null && FriendDetailViewModel.HasChanges)
             {
-                var showResult = MessageBox.Show("You have made changes. Navigate away?", "Question", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (showResult == MessageBoxResult.Cancel)
+                var showResult = _messageDialogService.ShowOkCancelDialog("You have made changes. Navigate away?", "Question");
+                if (showResult == MessageDialogResult.Cancel)
                 {
                     return;
                 }
