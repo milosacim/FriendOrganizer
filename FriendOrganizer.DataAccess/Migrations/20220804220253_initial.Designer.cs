@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FriendOrganizer.DataAccess.Migrations
 {
     [DbContext(typeof(FriendOrganizerDbContext))]
-    [Migration("20220801103503_initial")]
+    [Migration("20220804220253_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,6 @@ namespace FriendOrganizer.DataAccess.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

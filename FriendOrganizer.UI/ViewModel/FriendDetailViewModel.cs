@@ -29,9 +29,11 @@ namespace FriendOrganizer.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
-        public async Task LoadAsync(int friendId)
+        public async Task LoadAsync(int? friendId)
         {
-            var friend = await _friendRepository.GetByIdAsync(friendId);
+            var friend = friendId.HasValue
+                ? await _friendRepository.GetByIdAsync(friendId.Value)
+                :CreateNewFriend();
 
             Friend = new FriendWrapper(friend);
 
@@ -49,6 +51,12 @@ namespace FriendOrganizer.UI.ViewModel
             };
 
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+            if (Friend.Id == 0)
+            {
+                Friend.FirstName = "";
+            }
+
         }
 
         public FriendWrapper Friend
@@ -90,5 +98,12 @@ namespace FriendOrganizer.UI.ViewModel
                 });
         }
 
+        private Friend CreateNewFriend()
+        {
+            var friend = new Friend();
+            _friendRepository.Add(friend);
+
+            return friend;
+        }
     }
 }
