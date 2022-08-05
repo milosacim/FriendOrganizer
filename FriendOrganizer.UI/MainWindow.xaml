@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view ="clr-namespace:FriendOrganizer.UI.View"
+        xmlns:viewmodel ="clr-namespace:FriendOrganizer.UI.ViewModel"
         xmlns:local="clr-namespace:FriendOrganizer.UI"
         mc:Ignorable="d"
         Title="Friend Organizer" Height="450" Width="800" FontSize="18">
+    
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodel:FriendDetailViewModel}">
+            <view:FriendDetailView />
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
 
         <Grid.RowDefinitions>
@@ -28,10 +36,8 @@
         <view:NavigationView Grid.Row="1"
                              DataContext="{Binding NavigationViewModel}" />
 
-        <view:FriendDetailView Grid.Row="1"
+        <ContentControl Grid.Row="1"
                                Grid.Column="1" 
-                               DataContext="{Binding FriendDetailViewModel}" />
-
-
+                               Content="{Binding FriendDetailViewModel}" />
     </Grid>
 </Window>

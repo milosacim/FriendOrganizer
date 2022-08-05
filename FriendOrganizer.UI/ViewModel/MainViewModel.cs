@@ -22,13 +22,13 @@ namespace FriendOrganizer.UI.ViewModel
             _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
                 .Subscribe(OnOpenFriendDetailView);
 
+            _eventAggregator.GetEvent<AfteFriendDeletedEvent>()
+                .Subscribe(AfteFriendDeleted);
+
             CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
 
             NavigationViewModel = navigationViewModel;
-
         }
-
-
 
         private IEventAggregator _eventAggregator;
         private Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
@@ -44,7 +44,6 @@ namespace FriendOrganizer.UI.ViewModel
             get { return _friendDetailViewModel; }
             private set { _friendDetailViewModel = value; OnPropertyChanged(); }
         }
-
 
         public async Task LoadAsync()
         {
@@ -68,6 +67,11 @@ namespace FriendOrganizer.UI.ViewModel
         private void OnCreateNewFriendExecute()
         {
             OnOpenFriendDetailView(null);
+        }
+
+        private void AfteFriendDeleted(int friendId)
+        {
+            FriendDetailViewModel = null;
         }
     }
 }

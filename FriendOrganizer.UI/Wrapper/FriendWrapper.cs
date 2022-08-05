@@ -51,10 +51,6 @@ namespace FriendOrganizer.UI.Wrapper
                     {
                         yield return "Robots are not valid Friends!";
                     }
-                    else if (string.Equals(FirstName, ""))
-                    {
-                        yield return "Firstname cannot be empty!";
-                    }
                     break;
             }
 
