@@ -42,8 +42,12 @@ namespace FriendOrganizer.UI
             services.AddSingleton<IEventAggregator, EventAggregator>();
             services.AddSingleton<IMessageDialogService, MessageDialogService>();
 
+            services.AddTransient<LookupDataService>();
             services.AddTransient<IFriendRepository, FriendRepository>();
-            services.AddTransient<IFriendLookupDataService, LookupDataService>();
+            services.AddTransient<IProgrammingLanguageLookupDataService, LookupDataService>(x => x.GetRequiredService<LookupDataService>());
+            services.AddTransient<IFriendLookupDataService, LookupDataService>(x => x.GetRequiredService<LookupDataService>());
+            //services.AddTransient<IProgrammingLanguageLookupDataService, LookupDataService>();
+            //services.AddTransient<IFriendLookupDataService, LookupDataService>();
             services.AddTransient<IFriendDetailViewModel, FriendDetailViewModel>();
             services.AddTransient<Func<IFriendDetailViewModel>>(s => () => s.GetService<IFriendDetailViewModel>());
 

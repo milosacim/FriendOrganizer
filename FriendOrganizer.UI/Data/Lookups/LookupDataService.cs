@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.Data.Lookups
 {
-    public class LookupDataService : IFriendLookupDataService
+    public class LookupDataService : IFriendLookupDataService, IProgrammingLanguageLookupDataService
     {
         private readonly FriendOrganizerDbContext _context;
 
@@ -18,8 +18,14 @@ namespace FriendOrganizer.UI.Data.Lookups
 
         public async Task<IEnumerable<LookupItem>> GetFriendLookupAsync()
         {
-                return await _context.Friends
-                    .Select(f => new LookupItem { Id = f.Id, DisplayMember = f.FirstName + " " + f.LastName }).ToListAsync();
+            return await _context.Friends
+                .Select(f => new LookupItem { Id = f.Id, DisplayMember = f.FirstName + " " + f.LastName }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<LookupItem>> GetProgrammingLanguageLookupAsync()
+        {
+            return await _context.ProgrammingLanguages
+                .Select(f => new LookupItem { Id = f.Id, DisplayMember = f.Name }).ToListAsync();
         }
     }
 }
